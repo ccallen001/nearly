@@ -1,16 +1,30 @@
 <template>
   <div class="views Map">
     <h2 class="view-title">Map</h2>
-    <div id="map"></div>
+    <div id="map">
+      <v-icon id="marker" color="red">mdi-heart</v-icon>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .views.Map {
   #map {
+    position: relative;
     margin: auto;
     width: 90%;
     height: 400px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+      0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+
+    #marker {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 1;
+      transform: translateX(-50%) translateY(-50%);
+    }
   }
 }
 </style>
@@ -55,8 +69,8 @@ export default Vue.extend({
         })
       ],
       view: new ol.View({
-        center: ol.proj.fromLonLat([this.userLon, this.userLat]),
-        zoom: 18
+        center: [this.userLon, this.userLat],
+        zoom: 20
       })
     });
   }
