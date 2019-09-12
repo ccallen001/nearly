@@ -1,0 +1,8 @@
+html {
+  /* get rid of weird horizontal spacing on right ...looked like a phantom scrollbar or something */
+  overflow: hidden !important;
+}
+
+a {
+  text-decoration: none;
+}
