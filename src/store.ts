@@ -8,7 +8,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    currentUser: null
+    currentUser: null,
+    ballAndBiscuit: {
+      lat: 39.7716102,
+      lon: -86.1555977
+    }
   },
   mutations: {
     setCurrentUser(state, currentUser) {

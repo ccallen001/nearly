@@ -5,6 +5,7 @@
       <span class="map-loading" v-if="!currentUserLat || !currentUserLon">Loading...</span>
       <v-icon class="map-marker" color="red" v-else>mdi-heart</v-icon>
     </div>
+    <div class="at-bab" v-if="userIsAtBaB"></div>
   </div>
 </template>
 
@@ -29,6 +30,16 @@
       transform: translateX(-50%) translateY(-50%);
     }
   }
+
+  .at-bab {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 90%;
+    height: 75%;
+    background: url("../assets/cheers.gif") no-repeat center;
+  }
 }
 </style>
 
@@ -40,7 +51,9 @@ let view, map;
 export default Vue.extend({
   data: () => ({
     currentUserLat: 0,
-    currentUserLon: 0
+    currentUserLon: 0,
+    userIsAtBaB: false,
+    userHasSeenCheers: false
   }),
   beforeMount() {
     window.navigator.geolocation.watchPosition(
@@ -50,9 +63,29 @@ export default Vue.extend({
 
         if (view) {
           view.animate({
-            center: ol.proj.fromLonLat([this.currentUserLon, this.currentUserLat]),
-            duration:1000
+            center: ol.proj.fromLonLat([
+              this.currentUserLon,
+              this.currentUserLat
+            ]),
+            duration: 200
           });
+        }
+
+        /* just for fun */
+        const bab = this.$store.state.ballAndBiscuit;
+        if (
+          this.currentUserLat < bab.lat + 0.0005 &&
+          this.currentUserLat > bab.lat - 0.0005 &&
+          this.currentUserLon < bab.lon + 0.0005 &&
+          this.currentUserLon > bab.lon - 0.0005 &&
+          !this.userHasSeenCheers
+        ) {
+          window.alert("You're at the Ball and Biscuit!");
+          this.userIsAtBaB = true;
+          this.userHasSeenCheers = true;
+          setTimeout(() => {
+            this.userIsAtBaB = false;
+          }, 5000);
         }
       },
       err => {
