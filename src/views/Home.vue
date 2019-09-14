@@ -1,7 +1,7 @@
 <template>
   <div class="views Home">
     <h2 class="view-title">Home</h2>
-    <MainComponent :userEmail="userEmail" :userLat="userLat" :userLon="userLon" />
+    <MainComponent :currentUserEmail="currentUserEmail" :currentUserLat="currentUserLat" :currentUserLon="currentUserLon" />
   </div>
 </template>
 
@@ -26,18 +26,18 @@ export default {
     MainComponent
   },
   data: () => ({
-    userEmail: "",
-    userLat: 0,
-    userLon: 0
+    currentUserEmail: "",
+    currentUserLat: 0,
+    currentUserLon: 0
   }),
   beforeMount() {
-    const curentUser = fbAuth().currentUser;
-    this.userEmail = curentUser ? curentUser.email : "";
+    const curentUser = this.$store.state.currentUser;
+    this.currentUserEmail = curentUser ? curentUser.email : "";
 
     window.navigator.geolocation.watchPosition(
       userPosition => {
-        this.userLat = userPosition.coords.latitude;
-        this.userLon = userPosition.coords.longitude;
+        this.currentUserLat = userPosition.coords.latitude;
+        this.currentUserLon = userPosition.coords.longitude;
       },
       err => {
         throw new Error(err);

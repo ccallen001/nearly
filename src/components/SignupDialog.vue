@@ -61,9 +61,9 @@ export default Vue.extend({
       fbAuth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(resp => {
-          const userEmail = resp && resp.user && resp.user.email;
+          const currentUserEmail = resp && resp.user && resp.user.email;
 
-          window.alert(`Success! Account created for ${userEmail}`);
+          window.alert(`Success! Account created for ${currentUserEmail}`);
           this.$router.replace("/");
         })
         .catch(err => {

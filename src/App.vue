@@ -19,12 +19,11 @@
     <v-content>
       <router-view></router-view>
     </v-content>
-    <v-snackbar v-model="isUpdateAvailable"></v-snackbar>
   </v-app>
 </template>
 
 <style lang="scss">
-@import './style.scss';
+@import "./style.scss";
 
 .App {
   .background {
@@ -58,9 +57,12 @@ import Firebase from "firebase";
 const fbAuth = Firebase.auth;
 
 export default Vue.extend({
-  data: () => ({
-    isUpdateAvailable: false
-  }),
+  beforeCreate() {
+    /* initialize currentUser in the store */
+    this.$store.dispatch('getCurrentUser');
+    // console.log(this.$store.state.currentUser);
+  },
+  data: () => ({}),
   methods: {
     logout() {
       fbAuth()

@@ -2,7 +2,7 @@
   <div class="views Map">
     <h2 class="view-title">Map</h2>
     <div id="map">
-      <span class="map-loading" v-if="!userLat || !userLon">Loading...</span>
+      <span class="map-loading" v-if="!currentUserLat || !currentUserLon">Loading...</span>
       <v-icon class="map-marker" color="red" v-else>mdi-heart</v-icon>
     </div>
   </div>
@@ -39,27 +39,21 @@ let view, map;
 
 export default Vue.extend({
   data: () => ({
-    userLat: 0,
-    userLon: 0
+    currentUserLat: 0,
+    currentUserLon: 0
   }),
   beforeMount() {
     window.navigator.geolocation.watchPosition(
       userPosition => {
-        this.userLat = userPosition.coords.latitude;
-        this.userLon = userPosition.coords.longitude;
+        this.currentUserLat = userPosition.coords.latitude;
+        this.currentUserLon = userPosition.coords.longitude;
 
         if (view) {
           view.animate({
-            center: ol.proj.fromLonLat([this.userLon, this.userLat]),
-            duration: 1
+            center: ol.proj.fromLonLat([this.currentUserLon, this.currentUserLat]),
+            duration:1000
           });
         }
-
-        // if (map) {
-        //   map
-        //     .getView()
-        //     .setCenter(ol.proj.fromLonLat([this.userLon, this.userLat]));
-        // }
       },
       err => {
         throw new Error(err);
@@ -72,7 +66,7 @@ export default Vue.extend({
   },
   mounted() {
     view = new ol.View({
-      center: [this.userLon, this.userLat],
+      center: [this.currentUserLon, this.currentUserLat],
       zoom: 18
     });
 
