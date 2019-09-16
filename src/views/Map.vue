@@ -5,7 +5,7 @@
       <span class="map-loading" v-if="!currentUserLat || !currentUserLon">Loading...</span>
       <v-icon class="map-marker" color="red" v-else>mdi-heart</v-icon>
     </div>
-    <div class="at-bab" v-if="userIsAtBaB"></div>
+    <div class="at-iot" v-if="userIsAtIOT"></div>
   </div>
 </template>
 
@@ -31,14 +31,14 @@
     }
   }
 
-  .at-bab {
+  .at-iot {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
     width: 90%;
     height: 75%;
-    background: url("../assets/cheers.gif") no-repeat center;
+    background: url("../assets/iot.gif") no-repeat center;
   }
 }
 </style>
@@ -52,8 +52,8 @@ export default Vue.extend({
   data: () => ({
     currentUserLat: 0,
     currentUserLon: 0,
-    userIsAtBaB: false,
-    userHasSeenCheers: false
+    userIsAtIOT: false,
+    userHasSeenIOT: false
   }),
   beforeMount() {
     window.navigator.geolocation.watchPosition(
@@ -72,19 +72,19 @@ export default Vue.extend({
         }
 
         /* just for fun */
-        const bab = this.$store.state.ballAndBiscuit;
+        const iot = this.$store.state.iot;
         if (
-          this.currentUserLat < bab.lat + 0.0005 &&
-          this.currentUserLat > bab.lat - 0.0005 &&
-          this.currentUserLon < bab.lon + 0.0005 &&
-          this.currentUserLon > bab.lon - 0.0005 &&
-          !this.userHasSeenCheers
+          this.currentUserLat < iot.location.lat + 0.00018 &&
+          this.currentUserLat > iot.location.lat - 0.00018 &&
+          this.currentUserLon > iot.location.lon + 0.0018 &&
+          this.currentUserLon < iot.location.lon - 0.0018 &&
+          !this.userHasSeenIOT
         ) {
-          window.alert("You're at the Ball and Biscuit!");
-          this.userIsAtBaB = true;
-          this.userHasSeenCheers = true;
+          window.alert("You're at the IOT Lab!");
+          this.userIsAtIOT = true;
+          this.userHasSeenIOT = true;
           setTimeout(() => {
-            this.userIsAtBaB = false;
+            this.userIsAtIOT = false;
           }, 5000);
         }
       },
