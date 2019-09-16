@@ -67,7 +67,7 @@ export default Vue.extend({
               this.currentUserLon,
               this.currentUserLat
             ]),
-            duration: 200
+            duration: 100
           });
         }
 
