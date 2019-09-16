@@ -6,6 +6,14 @@
       <v-icon class="map-marker" color="red" v-else>mdi-heart</v-icon>
     </div>
     <div class="at-iot" v-if="userIsAtIOT"></div>
+    <div>
+      <p>currentUserLat: {{ currentUserLat }}</p>
+      <p>currentUserLon: {{ currentUserLon }}</p>
+      <p>-----</p>
+      <p>Lat boundaries: {{ iot.location.lat - 0.00018 }} {{ iot.location.lat + 0.00018 }}</p>
+      <p>Lon boundaries: {{ iot.location.lon - 0.0018 }} {{ iot.location.lon + 0.0018 }}</p>
+      <p>userHasSeenIOT: {{ userHasSeenIOT }}</p>
+    </div>
   </div>
 </template>
 
@@ -76,8 +84,8 @@ export default Vue.extend({
         if (
           this.currentUserLat < iot.location.lat + 0.00018 &&
           this.currentUserLat > iot.location.lat - 0.00018 &&
-          this.currentUserLon > iot.location.lon + 0.0018 &&
-          this.currentUserLon < iot.location.lon - 0.0018 &&
+          this.currentUserLon < iot.location.lon + 0.0018 &&
+          this.currentUserLon > iot.location.lon - 0.0018 &&
           !this.userHasSeenIOT
         ) {
           window.alert("You're at the IOT Lab!");
