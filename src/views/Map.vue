@@ -6,7 +6,7 @@
       <v-icon class="map-marker" color="red" v-else>mdi-heart</v-icon>
     </div>
     <div class="at-iot" v-if="userIsAtIOT"></div>
-    <div>
+    <div style="padding-top: 32px; text-align: center;">
       <p>currentUserLat: {{ currentUserLat }}</p>
       <p>currentUserLon: {{ currentUserLon }}</p>
       <p>-----</p>
@@ -63,6 +63,11 @@ export default Vue.extend({
     userIsAtIOT: false,
     userHasSeenIOT: false
   }),
+  computed: {
+    iot() {
+      return this.$store.state.iot;
+    }
+  },
   beforeMount() {
     window.navigator.geolocation.watchPosition(
       userPosition => {
@@ -80,12 +85,11 @@ export default Vue.extend({
         }
 
         /* just for fun */
-        const iot = this.$store.state.iot;
         if (
-          this.currentUserLat < iot.location.lat + 0.00018 &&
-          this.currentUserLat > iot.location.lat - 0.00018 &&
-          this.currentUserLon < iot.location.lon + 0.0018 &&
-          this.currentUserLon > iot.location.lon - 0.0018 &&
+          this.currentUserLat < this.iot.location.lat + 0.00018 &&
+          this.currentUserLat > this.iot.location.lat - 0.00018 &&
+          this.currentUserLon < this.iot.location.lon + 0.0018 &&
+          this.currentUserLon > this.iot.location.lon - 0.0018 &&
           !this.userHasSeenIOT
         ) {
           window.alert("You're at the IOT Lab!");
