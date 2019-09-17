@@ -51,7 +51,7 @@
 <script>
 import Vue from "vue";
 
-let view, map;
+let view, map, watchId;
 
 export default Vue.extend({
   computed: {
@@ -61,6 +61,40 @@ export default Vue.extend({
   },
   beforeMount() {
     const _this = this;
+
+    watchId = window.navigator.geolocation.watchPosition(
+      userPosition => {
+        this.$store.state.currentUser.location.lat =
+          userPosition.coords.latitude;
+        this.$store.state.currentUser.location.lon =
+          userPosition.coords.longitude;
+
+        if (
+          this.$store.state.currentUser.location.lat < 39.959958 &&
+          this.$store.state.currentUser.location.lat > 39.959754 &&
+          this.$store.state.currentUser.location.lon > -86.396622 &&
+          this.$store.state.currentUser.location.lon < -86.396315 &&
+          !this.$store.state.currentUser.hasSeenGif
+        ) {
+          window.alert("You're at Jamal's house!");
+          this.$store.state.currentUser.showGif = true;
+          this.$store.state.currentUser.hasSeenGif = true;
+
+          window.setTimeout(() => {
+            this.$store.state.currentUser.showGif = false;
+          }, 3000);
+        }
+      },
+      err => {
+        // window.alert("There was an error getting the user's location.");
+        //@ts-ignore
+        throw new Error(err);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 2000
+      }
+    );
 
     (function moveMap() {
       if (view) {
@@ -89,6 +123,10 @@ export default Vue.extend({
       ],
       view
     });
+  },
+  destroyed() {
+    console.log("stop watch position");
+    window.navigator.geolocation.clearWatch(watchId);
   }
 });
 </script>

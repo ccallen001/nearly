@@ -28,43 +28,6 @@ export default new Vuex.Store({
     setCurrentUser(state) {
       // @ts-ignore
       state.currentUser.firebaseData = firebase.auth().currentUser;
-
-      window.navigator.geolocation.watchPosition(
-        userPosition => {
-          try {
-            state.currentUser.location.lat = userPosition.coords.latitude;
-            state.currentUser.location.lon = userPosition.coords.longitude;
-
-            if (
-              state.currentUser.location.lat < 39.959958 &&
-              state.currentUser.location.lat > 39.959754 &&
-              state.currentUser.location.lon > -86.396622 &&
-              state.currentUser.location.lon < -86.396315 &&
-              !state.currentUser.hasSeenGif
-            ) {
-              window.alert("You're at Jamal's house!");
-              state.currentUser.showGif = true;
-              state.currentUser.hasSeenGif = true;
-
-              window.setTimeout(() => {
-                state.currentUser.showGif = false;
-              }, 3000);
-            }
-          } catch (err) {
-            // window.alert("There was an error getting the user's location.");
-            throw new Error(err);
-          }
-        },
-        err => {
-          // window.alert("There was an error getting the user's location.");
-          //@ts-ignore
-          throw new Error(err);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 2000
-        }
-      );
     }
   },
   actions: {}

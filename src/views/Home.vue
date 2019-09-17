@@ -18,7 +18,9 @@ import Vue from "vue";
 
 import MainComponent from "@/components/MainComponent.vue";
 
-export default {
+let watchId;
+
+export default Vue.extend({
   components: {
     MainComponent
   },
@@ -26,6 +28,29 @@ export default {
     currentUser() {
       return this.$store.state.currentUser;
     }
+  },
+  beforeMount() {
+    watchId = window.navigator.geolocation.watchPosition(
+      userPosition => {
+        this.$store.state.currentUser.location.lat =
+          userPosition.coords.latitude;
+        this.$store.state.currentUser.location.lon =
+          userPosition.coords.longitude;
+      },
+      err => {
+        // window.alert("There was an error getting the user's location.");
+        //@ts-ignore
+        throw new Error(err);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 2000
+      }
+    );
+  },
+  destroyed() {
+    console.log('stop watch position');
+    window.navigator.geolocation.clearWatch(watchId);
   }
-};
+});
 </script>
