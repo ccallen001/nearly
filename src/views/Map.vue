@@ -56,7 +56,6 @@ export default Vue.extend({
             _this.currentUser.location.lon,
             _this.currentUser.location.lat
           ]),
-          duration: 50
         });
       }
       window.requestAnimationFrame(moveMap);
