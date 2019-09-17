@@ -8,6 +8,7 @@
       >Loading...</span>
       <v-icon class="map-marker" color="red" v-else>mdi-heart</v-icon>
     </div>
+    <div class="gif" v-if="currentUser.showGif"></div>
   </div>
 </template>
 
@@ -32,6 +33,18 @@
       transform: translateX(-50%) translateY(-50%);
     }
   }
+
+  .gif {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 1;
+    width: 80vw;
+    height: 80vw;
+    border-radius: 4px;
+    background: url("../assets/gif.gif") no-repeat center / cover;
+  }
 }
 </style>
 
@@ -55,7 +68,7 @@ export default Vue.extend({
           center: ol.proj.fromLonLat([
             _this.currentUser.location.lon,
             _this.currentUser.location.lat
-          ]),
+          ])
         });
       }
       window.requestAnimationFrame(moveMap);
