@@ -24,8 +24,8 @@
 <script lang="ts">
 import Vue from "vue";
 
-import Firebase from "firebase";
-const fbAuth = Firebase.auth;
+import * as firebase from "firebase";
+import "firebase/auth";
 
 import LoginDialog from "@/components/LoginDialog.vue";
 import SignupDialog from "@/components/SignupDialog.vue";
@@ -36,7 +36,7 @@ export default Vue.extend({
     SignupDialog
   },
   data: () => ({
-    user: fbAuth().currentUser,
+    user: firebase.auth().currentUser,
 
     loginDialogActive: true,
     signupDialogActive: false

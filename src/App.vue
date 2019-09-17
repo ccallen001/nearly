@@ -52,25 +52,27 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Firebase from "firebase";
 
-const fbAuth = Firebase.auth;
+import * as firebase from "firebase";
+import "firebase/auth";
 
 export default Vue.extend({
   beforeCreate() {
-    /* initialize currentUser in the store */
-    this.$store.dispatch('getCurrentUser');
+    this.$store.commit("setCurrentUser");
     // console.log(this.$store.state.currentUser);
   },
   data: () => ({}),
   methods: {
     logout() {
-      fbAuth()
+      firebase
+        .auth()
         .signOut()
         .then(resp => {
-          this.$router.replace("/login");
+          /* don't do this, it's a duplication */
+          // this.$router.replace("/login");
         })
         .catch(err => {
+          window.alert("There was an error signing out.");
           throw new Error(err);
         });
     }

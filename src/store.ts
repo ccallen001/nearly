@@ -1,14 +1,20 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import Firebase from 'firebase';
-const fbAuth = Firebase.auth;
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    currentUser: null,
+    currentUser: {
+      firebaseData: null,
+      location: {
+        lat: 0,
+        lon: 0
+      }
+    },
     iot: {
       location: {
         lat: 39.9628276,
@@ -17,13 +23,26 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    setCurrentUser(state, currentUser) {
-      state.currentUser = currentUser;
+    setCurrentUser(state) {
+      // @ts-ignore
+      state.currentUser.firebaseData = firebase.auth().currentUser;
+
+      window.navigator.geolocation.watchPosition(
+        userPosition => {
+          state.currentUser.location.lat = userPosition.coords.latitude;
+          state.currentUser.location.lon = userPosition.coords.longitude;
+        },
+        err => {
+          // window.alert("There was an error getting the user's location.");
+          //@ts-ignore
+          throw new Error(err);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 2000
+        }
+      );
     }
   },
-  actions: {
-    getCurrentUser({ commit }) {
-      commit('setCurrentUser', fbAuth().currentUser);
-    }
-  }
+  actions: {}
 });

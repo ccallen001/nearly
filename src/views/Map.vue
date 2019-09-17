@@ -2,17 +2,11 @@
   <div class="views Map">
     <h2 class="view-title">Map</h2>
     <div id="map">
-      <span class="map-loading" v-if="!currentUserLat || !currentUserLon">Loading...</span>
+      <span
+        class="map-loading"
+        v-if="!currentUser.location.lat || !currentUser.location.lon"
+      >Loading...</span>
       <v-icon class="map-marker" color="red" v-else>mdi-heart</v-icon>
-    </div>
-    <div class="at-iot" v-if="userIsAtIOT"></div>
-    <div style="padding-top: 32px; text-align: center;">
-      <p>currentUserLat: {{ currentUserLat }}</p>
-      <p>currentUserLon: {{ currentUserLon }}</p>
-      <p>-----</p>
-      <p>Lat boundaries: {{ iot.location.lat - 0.00018 }} {{ iot.location.lat + 0.00018 }}</p>
-      <p>Lon boundaries: {{ iot.location.lon - 0.0018 }} {{ iot.location.lon + 0.0018 }}</p>
-      <p>userHasSeenIOT: {{ userHasSeenIOT }}</p>
     </div>
   </div>
 </template>
@@ -38,16 +32,6 @@
       transform: translateX(-50%) translateY(-50%);
     }
   }
-
-  .at-iot {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    width: 90%;
-    height: 75%;
-    background: url("../assets/iot.gif") no-repeat center;
-  }
 }
 </style>
 
@@ -57,61 +41,30 @@ import Vue from "vue";
 let view, map;
 
 export default Vue.extend({
-  data: () => ({
-    currentUserLat: 0,
-    currentUserLon: 0,
-    userIsAtIOT: false,
-    userHasSeenIOT: false
-  }),
   computed: {
-    iot() {
-      return this.$store.state.iot;
+    currentUser() {
+      return this.$store.state.currentUser;
     }
   },
   beforeMount() {
-    window.navigator.geolocation.watchPosition(
-      userPosition => {
-        this.currentUserLat = userPosition.coords.latitude;
-        this.currentUserLon = userPosition.coords.longitude;
+    const _this = this;
 
-        if (view) {
-          view.animate({
-            center: ol.proj.fromLonLat([
-              this.currentUserLon,
-              this.currentUserLat
-            ]),
-            duration: 100
-          });
-        }
-
-        /* just for fun */
-        if (
-          this.currentUserLat < this.iot.location.lat + 0.00018 &&
-          this.currentUserLat > this.iot.location.lat - 0.00018 &&
-          this.currentUserLon < this.iot.location.lon + 0.0018 &&
-          this.currentUserLon > this.iot.location.lon - 0.0018 &&
-          !this.userHasSeenIOT
-        ) {
-          window.alert("You're at the IOT Lab!");
-          this.userIsAtIOT = true;
-          this.userHasSeenIOT = true;
-          setTimeout(() => {
-            this.userIsAtIOT = false;
-          }, 5000);
-        }
-      },
-      err => {
-        throw new Error(err);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 5000
+    (function moveMap() {
+      if (view) {
+        view.animate({
+          center: ol.proj.fromLonLat([
+            _this.currentUser.location.lon,
+            _this.currentUser.location.lat
+          ]),
+          duration: 50
+        });
       }
-    );
+      window.requestAnimationFrame(moveMap);
+    })();
   },
   mounted() {
     view = new ol.View({
-      center: [this.currentUserLon, this.currentUserLat],
+      center: [this.currentUser.location.lon, this.currentUser.location.lat],
       zoom: 18
     });
 

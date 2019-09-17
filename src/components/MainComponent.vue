@@ -6,7 +6,7 @@
       </v-flex>
 
       <v-flex mb-2 xs12>
-        <h3 class="font-weight-bold mb-3">Hello, {{ currentUserEmail }}!</h3>
+        <h3 class="font-weight-bold mb-3">Hello, {{ currentUser.firebaseData.email }}!</h3>
       </v-flex>
 
       <v-flex mb-7 xs12>
@@ -14,10 +14,10 @@
           Your current location is:
           <br />
           <strong>Lat:</strong>
-          {{currentUserLat ? currentUserLat/*.toFixed(4)*/ : 'Loading...'}}
+          {{currentUser.location.lat ? currentUser.location.lat/*.toFixed(4)*/ : 'Loading...'}}
           <br />
           <strong>Long:</strong>
-          {{currentUserLon ? currentUserLon/*.toFixed(4)*/ : 'Loading...'}}
+          {{currentUser.location.lon ? currentUser.location.lon/*.toFixed(4)*/ : 'Loading...'}}
         </h4>
       </v-flex>
 
@@ -34,6 +34,6 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  props: ["currentUserEmail", "currentUserLat", "currentUserLon"]
+  props: ["currentUser"]
 });
 </script>

@@ -43,9 +43,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Firebase from "firebase";
 
-const fbAuth = Firebase.auth;
+import * as firebase from "firebase";
+import "firebase/auth";
 
 export default Vue.extend({
   data: () => ({
@@ -58,7 +58,8 @@ export default Vue.extend({
   }),
   methods: {
     signup() {
-      fbAuth()
+      firebase
+        .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(resp => {
           const currentUserEmail = resp && resp.user && resp.user.email;
