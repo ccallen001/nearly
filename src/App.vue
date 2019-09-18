@@ -68,8 +68,7 @@ export default Vue.extend({
         .auth()
         .signOut()
         .then(resp => {
-          /* don't do this, it's a duplication */
-          // this.$router.replace("/login");
+          window.location.href = window.location.href;
         })
         .catch(err => {
           window.alert("There was an error signing out.");

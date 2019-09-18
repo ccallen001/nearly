@@ -84,6 +84,15 @@ export default Vue.extend({
             this.$store.state.currentUser.showGif = false;
           }, 3000);
         }
+
+        if (view) {
+          view.animate({
+            center: ol.proj.fromLonLat([
+              _this.currentUser.location.lon,
+              _this.currentUser.location.lat
+            ])
+          });
+        }
       },
       err => {
         // window.alert("There was an error getting the user's location.");
@@ -95,18 +104,6 @@ export default Vue.extend({
         timeout: 2000
       }
     );
-
-    (function moveMap() {
-      if (view) {
-        view.animate({
-          center: ol.proj.fromLonLat([
-            _this.currentUser.location.lon,
-            _this.currentUser.location.lat
-          ])
-        });
-      }
-      window.requestAnimationFrame(moveMap);
-    })();
   },
   mounted() {
     view = new ol.View({

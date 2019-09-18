@@ -49,7 +49,7 @@ export default Vue.extend({
     );
   },
   destroyed() {
-    console.log('stop watch position');
+    console.log("stop watch position");
     window.navigator.geolocation.clearWatch(watchId);
   }
 });
