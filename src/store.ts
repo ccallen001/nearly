@@ -13,9 +13,7 @@ export default new Vuex.Store({
       location: {
         lat: 0,
         lon: 0
-      },
-      showGif: false,
-      hasSeenGif: false
+      }
     },
     jamalsHouse: {
       location: {
@@ -28,6 +26,10 @@ export default new Vuex.Store({
     setCurrentUser(state) {
       // @ts-ignore
       state.currentUser.firebaseData = firebase.auth().currentUser;
+    },
+    setCurrentUserLocation(state, { lat, lon }) {
+      state.currentUser.location.lat = lat;
+      state.currentUser.location.lon = lon;
     }
   },
   actions: {}

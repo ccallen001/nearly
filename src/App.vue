@@ -60,6 +60,11 @@ export default Vue.extend({
   beforeCreate() {
     this.$store.commit("setCurrentUser");
     // console.log(this.$store.state.currentUser);
+
+    window.setInterval(() => {
+      const { lat, lon } = this.$store.state.currentUser.location;
+      console.log({ lat, lon });
+    }, 1000);
   },
   data: () => ({}),
   methods: {

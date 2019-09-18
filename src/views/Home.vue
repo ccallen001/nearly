@@ -18,7 +18,7 @@ import Vue from "vue";
 
 import MainComponent from "@/components/MainComponent.vue";
 
-let watchId;
+let watchPositionId;
 
 export default Vue.extend({
   components: {
@@ -30,12 +30,12 @@ export default Vue.extend({
     }
   },
   beforeMount() {
-    watchId = window.navigator.geolocation.watchPosition(
+    watchPositionId = window.navigator.geolocation.watchPosition(
       userPosition => {
-        this.$store.state.currentUser.location.lat =
-          userPosition.coords.latitude;
-        this.$store.state.currentUser.location.lon =
-          userPosition.coords.longitude;
+        this.$store.commit("setCurrentUserLocation", {
+          lat: userPosition.coords.latitude,
+          lon: userPosition.coords.longitude
+        });
       },
       err => {
         // window.alert("There was an error getting the user's location.");
@@ -48,9 +48,9 @@ export default Vue.extend({
       }
     );
   },
-  destroyed() {
+  beforeDestroy() {
     console.log("stop watch position");
-    window.navigator.geolocation.clearWatch(watchId);
+    window.navigator.geolocation.clearWatch(watchPositionId);
   }
 });
 </script>

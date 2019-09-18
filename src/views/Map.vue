@@ -8,7 +8,7 @@
       >Loading...</span>
       <v-icon class="map-marker" color="red" v-else>mdi-heart</v-icon>
     </div>
-    <div class="gif" v-if="currentUser.showGif"></div>
+    <div class="gif" v-if="currentUserShowGif"></div>
   </div>
 </template>
 
@@ -51,9 +51,13 @@
 <script>
 import Vue from "vue";
 
-let view, map, watchId;
+let view, map, watchPositionId;
 
 export default Vue.extend({
+  data: () => ({
+    currentUserShowGif: false,
+    currentUserHasSeenGif: false
+  }),
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
@@ -62,26 +66,26 @@ export default Vue.extend({
   beforeMount() {
     const _this = this;
 
-    watchId = window.navigator.geolocation.watchPosition(
+    watchPositionId = window.navigator.geolocation.watchPosition(
       userPosition => {
-        this.$store.state.currentUser.location.lat =
-          userPosition.coords.latitude;
-        this.$store.state.currentUser.location.lon =
-          userPosition.coords.longitude;
+        _this.$store.commit("setCurrentUserLocation", {
+          lat: userPosition.coords.latitude,
+          lon: userPosition.coords.longitude
+        });
 
         if (
-          this.$store.state.currentUser.location.lat < 39.959958 &&
-          this.$store.state.currentUser.location.lat > 39.959754 &&
-          this.$store.state.currentUser.location.lon > -86.396622 &&
-          this.$store.state.currentUser.location.lon < -86.396315 &&
-          !this.$store.state.currentUser.hasSeenGif
+          _this.currentUser.location.lat < 39.959958 &&
+          _this.currentUser.location.lat > 39.959754 &&
+          _this.currentUser.location.lon > -86.396622 &&
+          _this.currentUser.location.lon < -86.396315 &&
+          !_this.currentUserHasSeenGif
         ) {
           window.alert("You're at Jamal's house!");
-          this.$store.state.currentUser.showGif = true;
-          this.$store.state.currentUser.hasSeenGif = true;
+          _this.currentUserShowGif = true;
+          _this.currentUserHasSeenGif = true;
 
           window.setTimeout(() => {
-            this.$store.state.currentUser.showGif = false;
+            _this.currentUserShowGif = false;
           }, 3000);
         }
 
@@ -101,13 +105,36 @@ export default Vue.extend({
       },
       {
         enableHighAccuracy: true,
-        timeout: 2000
+        timeout: 5000
       }
     );
   },
   mounted() {
+    if (!this.currentUser.location.lon || !this.currentUser.location.lat) {
+      window.navigator.geolocation.getCurrentPosition(
+        userPosition => {
+          this.$store.commit("setCurrentUserLocation", {
+            lat: userPosition.coords.latitude,
+            lon: userPosition.coords.longitude
+          });
+        },
+        err => {
+          // window.alert("There was an error getting the user's location.");
+          //@ts-ignore
+          throw new Error(err);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000
+        }
+      );
+    }
+
     view = new ol.View({
-      center: [this.currentUser.location.lon, this.currentUser.location.lat],
+      center: ol.proj.fromLonLat([
+        this.currentUser.location.lon,
+        this.currentUser.location.lat
+      ]),
       zoom: 18
     });
 
@@ -123,7 +150,7 @@ export default Vue.extend({
   },
   destroyed() {
     console.log("stop watch position");
-    window.navigator.geolocation.clearWatch(watchId);
+    window.navigator.geolocation.clearWatch(watchPositionId);
   }
 });
 </script>
