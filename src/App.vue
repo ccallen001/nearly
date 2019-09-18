@@ -68,7 +68,8 @@ export default Vue.extend({
         .auth()
         .signOut()
         .then(resp => {
-          window.location.href = window.location.href;
+          // @ts-ignore
+          this.$router.go();
         })
         .catch(err => {
           window.alert("There was an error signing out.");
