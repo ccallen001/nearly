@@ -72,11 +72,10 @@ export default Vue.extend({
           this.$root.$emit("locationUpdated");
         },
         err => {
-          console.error(err);
+          console.error(`ERROR: ${err.code} - ${err.message}`);
         },
         {
           enableHighAccuracy: true,
-          maximumAge: 100,
           timeout: 5000
         }
       );
