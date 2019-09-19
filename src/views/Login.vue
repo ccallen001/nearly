@@ -52,8 +52,10 @@ export default Vue.extend({
     });
   },
   mounted() {
-    /* gets the modal labels/placeholders to jump up and not occlude saved values in the inputs */
-    document.body.click();
+    /* gets the modal's labels/placeholders to jump up and not occlude saved values in the inputs */
+    window.setTimeout(() => {
+      document.body.click();
+    }, 500);
   }
 });
 </script>
