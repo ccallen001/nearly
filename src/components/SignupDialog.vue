@@ -69,7 +69,7 @@ export default Vue.extend({
         })
         .catch(err => {
           this.errorMessage = err;
-          throw new Error(err);
+          console.error(err);
         });
     },
     login() {

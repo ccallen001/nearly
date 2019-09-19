@@ -76,18 +76,14 @@ export default Vue.extend({
       view
     });
 
-    const _this = this;
-    function animateView() {
+    this.$root.$on("locationUpdated", () => {
       view.animate({
         center: ol.proj.fromLonLat([
-          _this.currentUser.location.lon,
-          _this.currentUser.location.lat
+          this.currentUser.location.lon,
+          this.currentUser.location.lat
         ])
       });
-
-      window.requestAnimationFrame(animateView);
-    }
-    animateView();
+    });
   }
 });
 </script>

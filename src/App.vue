@@ -69,15 +69,10 @@ export default Vue.extend({
             lon: currentUserPosition.coords.longitude
           });
 
-          console.log({
-            lat: this.$store.state.currentUser.location.lat,
-            lon: this.$store.state.currentUser.location.lon
-          });
+          this.$root.$emit("locationUpdated");
         },
         err => {
-          // window.alert("There was an error getting the user's location.");
-          //@ts-ignore
-          throw new Error(err);
+          console.error(err);
         },
         {
           enableHighAccuracy: true,
