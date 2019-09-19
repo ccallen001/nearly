@@ -53,7 +53,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import * as firebase from "firebase";
+import * as firebase from "firebase/app";
 import "firebase/auth";
 
 export default Vue.extend({
@@ -89,17 +89,11 @@ export default Vue.extend({
   },
   methods: {
     logout() {
-      firebase
-        .auth()
-        .signOut()
-        .then(resp => {
-          /* reload the app */
-          window.location = window.location;
-        })
-        .catch(err => {
-          window.alert("There was an error signing out.");
-          throw new Error(err);
-        });
+      if (this.$router.currentRoute.path === "/login") {
+        firebase.auth().signOut();
+      } else {
+        this.$router.replace("/login", () => firebase.auth().signOut());
+      }
     }
   }
 });

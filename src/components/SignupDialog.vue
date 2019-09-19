@@ -1,6 +1,6 @@
 <template>
   <div class="components SignupDialog">
-    <v-dialog persistent width="500" v-model="signupDialogShowing">
+    <v-dialog persistent width="500" v-model="signupDialogShowing" ref="signupDialog">
       <v-card>
         <v-card-title>Signup</v-card-title>
         <v-card-text>
@@ -44,7 +44,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import * as firebase from "firebase";
+import * as firebase from "firebase/app";
 import "firebase/auth";
 
 export default Vue.extend({
@@ -75,6 +75,10 @@ export default Vue.extend({
     login() {
       this.$parent.$emit("showLoginDialog");
     }
+  },
+  mounted() {
+    // @ts-ignore
+    this.$refs.signupDialog.$el.click();
   }
 });
 </script>

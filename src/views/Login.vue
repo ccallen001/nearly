@@ -24,7 +24,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import * as firebase from "firebase";
+import * as firebase from "firebase/app";
 import "firebase/auth";
 
 import LoginDialog from "@/components/LoginDialog.vue";
@@ -50,12 +50,6 @@ export default Vue.extend({
       this.loginDialogActive = false;
       this.signupDialogActive = true;
     });
-  },
-  mounted() {
-    /* gets the modal's labels/placeholders to jump up and not occlude saved values in the inputs */
-    window.setTimeout(() => {
-      document.body.click();
-    }, 500);
   }
 });
 </script>
