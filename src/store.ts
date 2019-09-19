@@ -1,9 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -23,9 +20,8 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    setCurrentUser(state) {
-      // @ts-ignore
-      state.currentUser.firebaseData = firebase.auth().currentUser;
+    setCurrentUserFirebaseData(state, currentUser) {
+      state.currentUser.firebaseData = currentUser;
     },
     setCurrentUserLocation(state, { lat, lon }) {
       state.currentUser.location.lat = lat;

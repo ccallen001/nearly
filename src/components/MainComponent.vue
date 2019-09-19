@@ -6,7 +6,7 @@
       </v-flex>
 
       <v-flex mb-2 xs12>
-        <h3 class="font-weight-bold mb-3">Hello, {{ currentUser.firebaseData.email }}!</h3>
+        <h3 class="font-weight-bold mb-3">Hello, {{ currentUser.firebaseData && currentUser.firebaseData.email }}!</h3>
       </v-flex>
 
       <v-flex mb-7 xs12>

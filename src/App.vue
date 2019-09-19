@@ -58,23 +58,43 @@ import "firebase/auth";
 
 export default Vue.extend({
   beforeCreate() {
-    this.$store.commit("setCurrentUser");
-    // console.log(this.$store.state.currentUser);
+    const currentUser = firebase.auth().currentUser;
+    this.$store.commit("setCurrentUserFirebaseData", currentUser);
 
-    window.setInterval(() => {
-      const { lat, lon } = this.$store.state.currentUser.location;
-      console.log({ lat, lon });
-    }, 1000);
+    if (currentUser) {
+      window.navigator.geolocation.watchPosition(
+        currentUserPosition => {
+          this.$store.commit("setCurrentUserLocation", {
+            lat: currentUserPosition.coords.latitude,
+            lon: currentUserPosition.coords.longitude
+          });
+
+          console.log({
+            lat: this.$store.state.currentUser.location.lat,
+            lon: this.$store.state.currentUser.location.lon
+          });
+        },
+        err => {
+          // window.alert("There was an error getting the user's location.");
+          //@ts-ignore
+          throw new Error(err);
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 100,
+          timeout: 5000
+        }
+      );
+    }
   },
-  data: () => ({}),
   methods: {
     logout() {
       firebase
         .auth()
         .signOut()
         .then(resp => {
-          // @ts-ignore
-          this.$router.go();
+          /* reload the app */
+          window.location = window.location;
         })
         .catch(err => {
           window.alert("There was an error signing out.");

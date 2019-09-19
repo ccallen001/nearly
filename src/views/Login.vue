@@ -50,6 +50,10 @@ export default Vue.extend({
       this.loginDialogActive = false;
       this.signupDialogActive = true;
     });
+  },
+  mounted() {
+    /* gets the modal labels/placeholders to jump up and not occlude saved values in the inputs */
+    document.body.click();
   }
 });
 </script>
