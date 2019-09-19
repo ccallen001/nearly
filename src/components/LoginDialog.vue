@@ -1,6 +1,6 @@
 <template>
-  <div class="components LoginDialog">
-    <v-dialog persistent width="500" v-model="loginDialogShowing" ref="loginDialog">
+  <div class="components LoginDialog" ref="loginDialog">
+    <v-dialog persistent width="500" v-model="loginDialogShowing">
       <v-card>
         <v-card-title>Login</v-card-title>
         <v-card-text>
@@ -74,8 +74,9 @@ export default Vue.extend({
     }
   },
   mounted() {
+    /* try to get the fields to not overlay saved email/passwords over placeholders */
     // @ts-ignore
-    this.$refs.loginDialog.$el.click();
+    this.$refs.loginDialog.click();
   }
 });
 </script>
