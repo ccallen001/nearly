@@ -51,10 +51,13 @@
 <script>
 import Vue from "vue";
 
-import Map from "ol/Map";
-import View from "ol/View";
+import firebase from "firebase/app";
+import "firebase/firestore";
+
+import "ol/ol.css";
+import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
-import OSM from "ol/source/OSM";
+import { OSM } from "ol/source";
 import * as proj from "ol/proj";
 
 export default Vue.extend({

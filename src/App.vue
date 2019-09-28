@@ -26,7 +26,7 @@
 @import "./style.scss";
 
 .App {
-  transition: filter 1000ms ease-out;
+  transition: filter 666ms ease-out;
 
   .background {
     position: absolute;
