@@ -61,6 +61,11 @@ import { OSM } from "ol/source";
 import * as proj from "ol/proj";
 
 export default Vue.extend({
+  data() {
+    return {
+      hasSeen: false
+    };
+  },
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
@@ -102,6 +107,33 @@ export default Vue.extend({
         view.animate({ center });
       }
     });
+
+    firebase
+      .firestore()
+      .collection("users")
+      .onSnapshot(snapshot => {
+        const usersNearby = [];
+
+        snapshot.docChanges().forEach(_nearbyUser => {
+          const nearbyUser = _nearbyUser.doc.data();
+
+          if (nearbyUser.email !== this.currentUser.firebaseData.email) {
+            if (
+              nearbyUser.lat < this.currentUser.location.lat + 0.0005 &&
+              nearbyUser.lat > this.currentUser.location.lat - 0.0005 &&
+              nearbyUser.lon < this.currentUser.location.lon + 0.0005 &&
+              nearbyUser.lon > this.currentUser.location.lon - 0.0005
+            ) {
+              usersNearby.push(nearbyUser.email);
+            }
+          }
+        });
+
+        if (usersNearby.length && !this.hasSeen) {
+          window.alert(`${usersNearby.join()} are Nearly®!`);
+          this.hasSeen = true;
+        }
+      });
   }
 });
 </script>
