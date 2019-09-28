@@ -130,7 +130,7 @@ export default Vue.extend({
         });
 
         if (usersNearby.length && !this.hasSeen) {
-          window.alert(`${usersNearby.join()} are Nearly®!`);
+          window.alert(`${usersNearby.join()} ${usersNearby.length === 1 ? 'is' : 'are'} Nearly®!`);
           this.hasSeen = true;
         }
       });
