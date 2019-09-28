@@ -55,6 +55,7 @@ import Map from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
+import * as proj from "ol/proj";
 
 export default Vue.extend({
   computed: {
@@ -68,6 +69,8 @@ export default Vue.extend({
       zoom: 1
     });
 
+    let isInitial = true;
+
     new Map({
       target: "map",
       layers: [
@@ -78,12 +81,23 @@ export default Vue.extend({
       view
     });
 
-    view.animate({ zoom: 18 });
-
     this.$root.$on("locationUpdated", () => {
-      view.animate({
-        center: [this.currentUser.location.lon, this.currentUser.location.lat]
-      });
+      const center = proj.fromLonLat([
+        this.currentUser.location.lon,
+        this.currentUser.location.lat
+      ]);
+
+      if (isInitial) {
+        view.animate({
+          center,
+          zoom: 18,
+          duration: 2000
+        });
+
+        isInitial = false;
+      } else {
+        view.animate({ center });
+      }
     });
   }
 });
