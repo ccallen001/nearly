@@ -51,6 +51,11 @@
 <script>
 import Vue from "vue";
 
+import Map from "ol/Map";
+import View from "ol/View";
+import TileLayer from "ol/layer/Tile";
+import OSM from "ol/source/OSM";
+
 export default Vue.extend({
   computed: {
     currentUser() {
@@ -58,30 +63,26 @@ export default Vue.extend({
     }
   },
   mounted() {
-    const view = new ol.View({
-      center: ol.proj.fromLonLat([
-        this.currentUser.location.lon,
-        this.currentUser.location.lat
-      ]),
-      zoom: 18
+    const view = new View({
+      center: [this.currentUser.location.lon, this.currentUser.location.lat],
+      zoom: 1
     });
 
-    new ol.Map({
+    new Map({
       target: "map",
       layers: [
-        new ol.layer.Tile({
-          source: new ol.source.OSM()
+        new TileLayer({
+          source: new OSM()
         })
       ],
       view
     });
 
+    view.animate({ zoom: 18 });
+
     this.$root.$on("locationUpdated", () => {
       view.animate({
-        center: ol.proj.fromLonLat([
-          this.currentUser.location.lon,
-          this.currentUser.location.lat
-        ])
+        center: [this.currentUser.location.lon, this.currentUser.location.lat]
       });
     });
   }

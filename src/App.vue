@@ -1,8 +1,8 @@
 <template>
-  <v-app class="App">
+  <v-app class="App" :style="mode">
     <div class="background"></div>
     <v-app-bar app>
-      <v-toolbar-title class="headline text-uppercase">
+      <v-toolbar-title class="headline text-uppercase" title="Toggle dark mode" @click="toggleMode">
         <span>Nearly</span>
       </v-toolbar-title>
       <v-toolbar-items>
@@ -26,6 +26,8 @@
 @import "./style.scss";
 
 .App {
+  transition: filter 1000ms ease-out;
+
   .background {
     position: absolute;
     top: 0;
@@ -35,6 +37,10 @@
     background: url("https://previews.123rf.com/images/ohyooha/ohyooha1503/ohyooha150300020/37268577-world-map-of-love-with-red-hearts-on-white-background.jpg")
       no-repeat center / cover;
     opacity: 0.1;
+  }
+
+  .v-toolbar__title {
+    cursor: pointer;
   }
 
   .nav-btn {
@@ -72,7 +78,9 @@ export default Vue.extend({
           this.$root.$emit("locationUpdated");
         },
         err => {
-          console.error(`ERROR: ${err.code} - ${err.message}`);
+          console.error(
+            `Error getting user location: ${err.code} - ${err.message}`
+          );
         },
         {
           enableHighAccuracy: true,
@@ -81,6 +89,11 @@ export default Vue.extend({
       );
     }
   },
+  data() {
+    return {
+      mode: ""
+    };
+  },
   methods: {
     logout() {
       if (this.$router.currentRoute.path === "/login") {
@@ -88,6 +101,10 @@ export default Vue.extend({
       } else {
         this.$router.replace("/login", () => firebase.auth().signOut());
       }
+    },
+    toggleMode() {
+      /* toggle dark mode */
+      this.mode = !this.mode ? "filter: invert(1)" : "";
     }
   }
 });

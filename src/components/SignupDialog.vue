@@ -9,7 +9,7 @@
           <div class="error-message">{{ errorMessage }}</div>
         </v-card-text>
         <v-card-actions class="or-login">
-          <v-btn text color="blue" :ripple="false" @click="login">Or Login</v-btn>
+          <v-btn text color="blue" :ripple="false" @click="showLoginDialog">Or Login</v-btn>
         </v-card-actions>
         <v-card-actions>
           <v-btn @click="signup">Signup</v-btn>
@@ -72,7 +72,7 @@ export default Vue.extend({
           console.error(`ERROR: ${err.code} - ${err.message}`);
         });
     },
-    login() {
+    showLoginDialog() {
       this.$parent.$emit("showLoginDialog");
     }
   }

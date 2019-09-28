@@ -9,7 +9,7 @@
           <div class="error-message">{{ errorMessage }}</div>
         </v-card-text>
         <v-card-actions class="or-signup">
-          <v-btn text color="blue" :ripple="false" @click="signup">Or Signup</v-btn>
+          <v-btn text color="blue" :ripple="false" @click="showSignupDialog">Or Signup</v-btn>
         </v-card-actions>
         <v-card-actions>
           <v-btn @click="login">Login</v-btn>
@@ -69,14 +69,9 @@ export default Vue.extend({
           console.error(`ERROR: ${err.code} - ${err.message}`);
         });
     },
-    signup() {
+    showSignupDialog() {
       this.$parent.$emit("showSignupDialog");
     }
-  },
-  mounted() {
-    /* try to get the fields to not overlay saved email/passwords over placeholders */
-    // @ts-ignore
-    this.$refs.loginDialog.click();
   }
 });
 </script>
