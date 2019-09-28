@@ -4,8 +4,13 @@
       <v-card>
         <v-card-title>Signup</v-card-title>
         <v-card-text>
-          <v-text-field type="Email" label="Email" v-model="email" @keypress="signup"></v-text-field>
-          <v-text-field type="password" label="Password" v-model="password" @keypress="signup"></v-text-field>
+          <v-text-field type="Email" label="Email" v-model="email" @keypress.enter="signup"></v-text-field>
+          <v-text-field
+            type="password"
+            label="Password"
+            v-model="password"
+            @keypress.enter="signup"
+          ></v-text-field>
           <div class="error-message">{{ errorMessage }}</div>
         </v-card-text>
         <v-card-actions class="or-login">
@@ -46,6 +51,7 @@ import Vue from "vue";
 
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/firestore";
 
 export default Vue.extend({
   data: () => ({
@@ -62,14 +68,24 @@ export default Vue.extend({
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(resp => {
+          const currentUserId = resp && resp.user && resp.user.uid;
           const currentUserEmail = resp && resp.user && resp.user.email;
 
-          window.alert(`Success! Account created for ${currentUserEmail}`);
-          this.$router.replace("/");
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(this.email)
+            .set({
+              id: currentUserId,
+              email: currentUserEmail
+            })
+            .then(resp => this.$router.replace("/"));
         })
         .catch(err => {
           this.errorMessage = err;
-          console.error(`ERROR: ${err.code} - ${err.message}`);
+          console.error(
+            `There was an error signing up: ${err.code} - ${err.message}`
+          );
         });
     },
     showLoginDialog() {

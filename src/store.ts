@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -24,8 +27,16 @@ export default new Vuex.Store({
       state.currentUser.firebaseData = currentUser;
     },
     setCurrentUserLocation(state, { lat, lon }) {
-      state.currentUser.location.lat = lat;
-      state.currentUser.location.lon = lon;
+      if (state.currentUser.firebaseData) {
+        // @ts-ignore
+        firebase.firestore().collection('users').doc(state.currentUser.firebaseData.email).update({
+          lat,
+          lon
+        }).then(() => {
+          state.currentUser.location.lat = lat;
+          state.currentUser.location.lon = lon;
+        });
+      }
     }
   },
   actions: {}

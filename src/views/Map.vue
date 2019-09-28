@@ -91,7 +91,7 @@ export default Vue.extend({
         view.animate({
           center,
           zoom: 18,
-          duration: 2000
+          duration: 3000
         });
 
         isInitial = false;
